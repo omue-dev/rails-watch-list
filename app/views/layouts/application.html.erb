@@ -10,7 +10,26 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="bg-dark text-light">
+    <div class="d-flex">
+      <!-- Sidebar -->
+      <aside class="bg-black p-3 vh-100" style="width:300px;">
+        <h4 class="text-danger mb-4">Your Lists</h4>
+        <nav class="nav flex-column">
+          <%= link_to "New List", new_list_path, class: "btn btn-outline-danger mt-3" %>
+          <hr class="bg-secondary">
+          <% @lists.each do |list| %>
+            <%= link_to list.name, list_path(list),
+                  data: { turbo_frame: "main_content" },
+                  class: "nav-link text-secondary #{'text-danger fw-bold' if current_page?(list_path(list))}" %>
+          <% end %>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-grow-1 p-4 <%= current_page?(root_path) ? 'p-0' : 'p-4' %>">
+          <%= yield %>
+      </main>
+    </div>
   </body>
 </html>

@@ -1,9 +1,10 @@
 // Import Google fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito:400,700|Work+Sans:400,700&display=swap');
+// app/assets/stylesheets/config/_fonts.scss
 
-// Define fonts for body and headers
-$body-font: "Work Sans", "Helvetica", "sans-serif";
-$headers-font: "Nunito", "Helvetica", "sans-serif";
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500&family=Roboto:wght@300;400;700&display=swap');
+
+$body-font: 'Roboto', sans-serif;
+$headers-font: 'Oswald', sans-serif;
 
 // To use a font file (.woff) uncomment following lines
 // @font-face {

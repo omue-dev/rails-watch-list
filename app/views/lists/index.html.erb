@@ -1,0 +1,28 @@
+<turbo-frame id="main_content">
+  <% if @random_movie %>
+    <div class="hero-container d-flex flex-column flex-lg-row align-items-center bg-dark rounded-4 shadow-lg overflow-hidden">
+      <!-- Poster left -->
+      <div class="hero-poster col-12 col-lg-5">
+        <img src="<%= @random_movie.poster_url %>" alt="<%= @random_movie.title %>" class="img-fluid w-100 h-100">
+      </div>
+
+      <!-- Text right -->
+      <div class="hero-text col-12 col-lg-7 p-5 text-light">
+        <h1 class="display-5 fw-bold mb-3 text-danger">FEATURED:</h1>
+        <h2 class="display-5 fw-bold mb-3"><%= @random_movie.title %></h2>
+        <p class="lead text-secondary mb-4"><%= truncate(@random_movie.overview, length: 300) %></p>
+
+        <% if @random_movie.respond_to?(:rating) && @random_movie.rating.present? %>
+          <span class="badge bg-danger fs-6 mb-3">⭐ <%= @random_movie.rating.round(1) %></span>
+        <% end %>
+
+        <div>
+          <%= link_to "View Lists", lists_path, class: "btn btn-outline-danger btn-lg me-2" %>
+          <%= link_to "Watch Trailer", "#", class: "btn btn-outline-light btn-lg" %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <p class="text-muted">No movies available yet.</p>
+  <% end %>
+</turbo-frame>
