@@ -1,62 +1,106 @@
-.hero-container {
-  display: flex;
-  align-items: stretch;
-  min-height: 100vh;      /* volle Bildschirmhöhe */
-  margin: 0;
-  background-color: #0d0d0d;
-  overflow: hidden;
+// ============================================================================
+// Hero Section Layout
+// ============================================================================
+
+// ---------- Global Background ----------
+
+body {
+  background-image: image-url('cinema.png');  // Fixed theater curtain background
+  background-size: cover;                     // Ensure full viewport coverage
+  background-attachment: fixed;               // Creates subtle parallax effect
 }
 
-/* Poster LINKS – nimmt z. B. 50% Breite */
+
+// ---------- Hero Container ----------
+
+.hero-container {
+  display: flex;                              // Establishes two-column layout
+  align-items: contain;                       // NOTE: “contain” isn't a valid value for align-items —
+                                              // should likely be "stretch" or "center" depending on design
+  min-height: 100vh;                          // Full viewport height for immersive hero section
+  margin: 0;
+  background-color: #0d0d0d;                  // Fallback color behind poster (deep cinematic black)
+  overflow: hidden;                           // Prevent overflow when images scale on hover
+}
+
+
+// ---------- Left Side: Movie Poster ----------
+
 .hero-poster {
-  flex: 0 0 35%;
+  flex: 0 0 35%;                              // Fixed width column (roughly one-third)
   position: relative;
   padding: 0;
   margin: 0;
-  height: 100vh;          /* Container-Höhe */
+  height: 100vh;                              // Matches viewport height for symmetry
 }
 
 .hero-poster img {
   display: block;
-  max-height: 90vh;
+  max-height: 90vh;                           // Prevents over-scaling on ultra-tall screens
   width: 100%;
-  height: 100%;           /* füllt .hero-poster */
-  object-fit: contain;      /* kein Verzerren */
-  object-position: left;
+  height: 100%;                               // Stretches to fill hero-poster area
+  object-fit: contain;                        // Keeps aspect ratio — no distortion
+  object-position: left;                      // Aligns poster neatly to the left edge
 }
 
 
-/* Text RECHTS – vertikal zentriert */
+// ---------- Right Side: Text Content ----------
+
 .hero-text {
-  flex: 1;
-  max-width: 65%;
+  flex: 1;                                    // Expands to fill remaining width
+  max-width: 65%;                             // Ensures readable line lengths
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: clamp(1.5rem, 4vw, 4rem);
-  color: #f8f9fa;
+  justify-content: center;                    // Vertically centers text beside the poster
+  padding: clamp(1.5rem, 4vw, 4rem);          // Fluid padding (scales between devices)
+  color: #f8f9fa;                             // Off-white text for better contrast
 }
 
 .hero-text h1 {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Oswald', sans-serif;          // Strong, cinematic headline font
   font-weight: 700;
-  text-transform: uppercase;
+  text-transform: uppercase;                  // Bold movie-style title caps
   letter-spacing: 1px;
   color: #fff;
 }
 
 .hero-text p {
-  color: #bbb;
-  font-size: 1.075rem;
+  color: #bbb;                                // Softer contrast for secondary text
+  font-size: 1.075rem;                        // Slightly larger than body text for readability
 }
 
-.hero-text .btn { transition: transform .2s ease; }
-.hero-text .btn:hover { transform: translateY(-1px); }
+.hero-text .btn {
+  transition: transform 0.2s ease;            // Smooth motion for button hover
+}
 
-/* Optional: auf kleinen Screens untereinander stacken */
+.hero-text .btn:hover {
+  transform: translateY(-1px);                // Micro-lift effect for tactile feedback
+}
+
+
+// ---------- Responsive Layout (Mobile / Tablet) ----------
+
 @media (max-width: 992px) {
-  .hero-container { flex-direction: column; }
-  .hero-poster { flex-basis: auto; height: 60vh; }
-  .hero-text { max-width: 100%; padding: 1.25rem; }
-  .hero-poster::after { background: linear-gradient(to bottom, rgba(13,13,13,0.7), rgba(13,13,13,0)); }
+  .hero-container {
+    flex-direction: column;                   // Stack poster + text vertically
+  }
+
+  .hero-poster {
+    flex-basis: auto;
+    height: 60vh;                             // Reduce height to fit smaller screens
+  }
+
+  .hero-text {
+    max-width: 100%;
+    padding: 1.25rem;                         // Compact spacing on mobile
+  }
+
+  .hero-poster::after {
+    // Optional gradient overlay to blend poster into background
+    background: linear-gradient(
+      to bottom,
+      rgba(13, 13, 13, 0.7),
+      rgba(13, 13, 13, 0)
+    );
+  }
 }

@@ -1,28 +1,89 @@
-<turbo-frame id="main_content">
-  <% if @random_movie %>
-    <div class="hero-container d-flex flex-column flex-lg-row align-items-center bg-dark rounded-4 shadow-lg overflow-hidden">
-      <!-- Poster left -->
-      <div class="hero-poster col-12 col-lg-5">
-        <img src="<%= @random_movie.poster_url %>" alt="<%= @random_movie.title %>" class="img-fluid w-100 h-100">
+<!-- Header -->
+<div class="text-center mb-5">
+  <h1 class="fw-bold text-light display-5">Choose Your List</h1>
+  <hr class="w-25 mx-auto border-danger opacity-75">
+</div>
+
+<!-- Lists Grid -->
+<div class="container">
+  <div class="row justify-content-center g-4">
+
+    <% @lists.each do |list| %>
+      <% random_movie = Movie.all.sample %>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card bg-dark text-light shadow-lg border-0 rounded-3 list-card h-100 overflow-hidden">
+
+          <!-- Movie Poster top -->
+          <% if random_movie&.poster_url.present? %>
+            <img src="<%= random_movie.poster_url %>"
+                 alt="<%= random_movie.title %>"
+                 class="object-fit-cover w-100"
+                 style="height: 220px; object-position: top;">
+          <% else %>
+            <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 220px;">
+              <i class="bi bi-film fs-1 text-muted"></i>
+            </div>
+          <% end %>
+
+          <!-- Card Body bottom -->
+          <div class="card-body d-flex flex-column justify-content-between bg-dark p-3 flex-grow-1">
+            <h4 class="fw-bold text-center mb-3"><%= list.name %></h4>
+          </div>
+
+          <!-- Full-width Button -->
+          <%= link_to "Open List →", list_path(list),
+                      class: "btn btn-danger fw-bold w-100 rounded-0 border-0 py-2" %>
+        </div>
       </div>
+    <% end %>
 
-      <!-- Text right -->
-      <div class="hero-text col-12 col-lg-7 p-5 text-light">
-        <h1 class="display-5 fw-bold mb-3 text-danger">FEATURED:</h1>
-        <h2 class="display-5 fw-bold mb-3"><%= @random_movie.title %></h2>
-        <p class="lead text-secondary mb-4"><%= truncate(@random_movie.overview, length: 300) %></p>
+    <!-- Add New List Card (opens modal) -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card bg-dark text-light shadow-lg border-0 rounded-3 list-card h-100 overflow-hidden d-flex flex-column justify-content-between align-items-center"
+           data-bs-toggle="modal" data-bs-target="#newListModal"
+           style="cursor: pointer;">
 
-        <% if @random_movie.respond_to?(:rating) && @random_movie.rating.present? %>
-          <span class="badge bg-danger fs-6 mb-3">⭐ <%= @random_movie.rating.round(1) %></span>
-        <% end %>
+        <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1">
+          <i class="bi bi-plus-circle-fill text-danger" style="font-size: 4rem;"></i>
+          <h5 class="fw-bold mt-3">Create New List</h5>
+        </div>
 
-        <div>
-          <%= link_to "View Lists", lists_path, class: "btn btn-outline-danger btn-lg me-2" %>
-          <%= link_to "Watch Trailer", "#", class: "btn btn-outline-light btn-lg" %>
+        <div class="btn btn-danger text-dark fw-bold w-100 rounded-0 border-1 py-2">
+          New List
         </div>
       </div>
     </div>
-  <% else %>
-    <p class="text-muted">No movies available yet.</p>
-  <% end %>
-</turbo-frame>
+
+  </div>
+</div>
+
+
+<!-- New List Modal -->
+<div class="modal fade" id="newListModal" tabindex="-1" aria-labelledby="newListModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-light border-secondary shadow-lg">
+
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title fw-bold" id="newListModalLabel">Create New List</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <%= simple_form_for(List.new, html: { data: { turbo_frame: "main_content" } }) do |f| %>
+          <div class="mb-3">
+            <%= f.input :name,
+                        label: "List name",
+                        placeholder: "Enter a name for your list...",
+                        input_html: { class: "form-control bg-secondary text-light border-0 shadow-none" } %>
+          </div>
+
+          <div class="d-grid">
+            <%= f.submit "Create List", class: "btn btn-danger fw-bold shadow-sm" %>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>

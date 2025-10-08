@@ -1,8 +1,8 @@
 class ListsController < ApplicationController
-  before_action :set_lists
+  before_action :set_lists, only:[:index]
 
   def index
-    @random_movie = Movie.all.sample
+    @random_movies = Movie.all.sample(@lists.count)
   end
 
   def show

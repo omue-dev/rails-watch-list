@@ -1,117 +1,129 @@
-// app/assets/stylesheets/pages/_lists.scss
+// ============================================================================
+// Lists Page Styles
+// ============================================================================
+
+// ---------- Global Typography & Base Layout ----------
 
 body {
-  font-family: $body-font;
+  font-family: $body-font;        // Clean, readable font for body text
   font-weight: 400;
-  background-color: #0d0d0d;
-  color: #f8f9fa;
+  background-color: #0d0d0d;      // Deep black background for contrast & depth
+  color: #f8f9fa;                 // Soft white for comfortable readability
 }
 
 h1, h2, h3, h4, h5 {
-  font-family: $headers-font;
+  font-family: $headers-font;     // Bold display font for headings
   font-weight: 600;
 }
 
 aside {
-  border-right: 1px solid #222;
+  border-right: 1px solid #222;   // Subtle divider for sidebar navigation
 }
 
+
+// ---------- Navigation Links ----------
+
 .nav-link {
-  color: #aaa !important;
+  color: #aaa !important;         // Muted default color for low visual weight
   font-weight: 500;
   margin-bottom: 0.5rem;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease;    // Smooth hover transition
 }
 
 .nav-link:hover {
-  color: #fff !important;
+  color: #fff !important;         // Bright highlight on hover for clarity
 }
 
 .nav-link.active,
 .nav-link.text-danger.fw-bold {
-  color: #dc3545 !important;
+  color: #dc3545 !important;      // Red accent for active / highlighted state
 }
+
+
+// ---------- Card Components ----------
 
 .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-radius: 10px;
-  overflow: hidden;
+  border-radius: 10px;            // Slightly rounded corners for modern look
+  overflow: hidden;               // Prevent image overflow on hover zoom
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 15px rgba(255, 0, 0, 0.2);
+  transform: translateY(-5px);    // Gentle lift effect on hover
+  box-shadow: 0 6px 15px rgba(255, 0, 0, 0.2); // Red-tinted shadow glow
 }
 
 .card-title {
-  color: #fff;
+  color: #fff;                    // Ensure high contrast for movie titles
 }
 
 .card-text {
-  font-size: 0.9rem;
+  font-size: 0.9rem;              // Slightly smaller text for compact layout
 }
 
 .movie-card img {
-  object-fit: cover;
-  height: 400px;
+  object-fit: cover;              // Keeps image proportional while filling space
+  height: 400px;                  // Consistent card height across all images
 }
 
-// --- Bookmark Form Styling ---
 
-.bookmark-form-container {
-  background: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
-  box-shadow: 0 4px 20px rgba(255, 0, 0, 0.05);
-  transition: all 0.3s ease;
+// ---------- Modal Styling (Dark Mode) ----------
 
-  &:hover {
-    box-shadow: 0 6px 25px rgba(255, 0, 0, 0.15);
-  }
+.modal-content {
+  background-color: #1e1e1e;      // Matte black modal background
+}
 
-  h5 {
-    letter-spacing: 0.05em;
-  }
+.modal-content .form-select,
+.modal-content .form-control {
+  background-color: #2a2a2a;      // Input fields in dark gray for consistency
+  color: #f5f5f5;
+}
 
-  .custom-select,
-  .custom-input {
-    background-color: #1b1b1b;
-    border: 1px solid #333;
-    color: #f8f9fa;
-    border-radius: 6px;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    transition: all 0.2s ease;
+.modal-content .btn-danger {
+  background-color: #e50914;      // Netflix red — strong CTA color
+  border: none;
+}
 
-    &:focus {
-      border-color: #dc3545;
-      box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
-      background-color: #111;
-    }
+.modal-content .btn-danger:hover {
+  background-color: #f6121d;      // Slightly lighter red on hover for energy
+}
 
-    &::placeholder {
-      color: #888;
-      font-style: italic;
-    }
-  }
 
-  .btn-danger {
-    background: linear-gradient(90deg, #e50914 0%, #ff4b2b 100%);
-    border: none;
-    border-radius: 8px;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+// ---------- Featured Card (Hero Section) ----------
 
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(255, 75, 43, 0.3);
-    }
+.featured-card img {
+  transition: transform 0.5s ease; // Smooth zoom effect for hero visuals
+}
 
-    &:active {
-      transform: scale(0.97);
-    }
-  }
+.featured-card:hover img {
+  transform: scale(1.02);          // Subtle hero image scale on hover
+}
 
-  .alert-danger {
-    background-color: rgba(220, 53, 69, 0.1);
-    border-color: rgba(220, 53, 69, 0.3);
-    color: #ff6b6b;
-  }
+.featured-card .btn {
+  background: #dc3545;             // Red action button consistent with brand color
+  border: none;
+}
+
+
+// ---------- List Cards (Index Grid) ----------
+
+.list-card {
+  height: 350px;                   // Fixed card height for consistent grid
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.list-card img {
+  transition: transform 0.4s ease, filter 0.4s ease; // Smooth zoom & brightness fade
+}
+
+.list-card:hover img {
+  transform: scale(1.05);          // Light zoom on hover to add depth
+  filter: brightness(85%);         // Slightly dim for visual contrast
+}
+
+.list-card:hover {
+  transform: translateY(-5px);     // Elevation effect for interactivity
+  box-shadow: 0 0 25px rgba(255, 0, 0, 0.4); // Cinematic red glow accent
 }

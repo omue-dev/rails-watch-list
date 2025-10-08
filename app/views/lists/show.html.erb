@@ -1,90 +1,102 @@
-<turbo-frame id="main_content">
-  <!-- List title -->
-  <h2 class="mb-4 fw-bold display-6"><%= @selected_list.name %></h2>
-
-  <!-- Inline Add Movie Form -->
-  <div class="bookmark-form-container mb-5 p-4 rounded-3 border:0 bg-secondary text-dark shadow-sm">
-    <h5 class="text-uppercase text-light mb-4 fw-bold">Add a new movie to this list</h5>
-
-    <%= simple_form_for([@selected_list, @bookmark], html: { class: "row gy-3 gx-3" }) do |f| %>
-      <div class="col-12 col-md-5">
-        <%= f.association :movie,
-              collection: Movie.all.order(:title),
-              prompt: "🎬  Select a movie",
-              label: false,
-              input_html: { class: "form-select form-select-sm custom-select" } %>
-      </div>
-
-      <div class="col-12 col-md-5">
-        <%= f.input :comment,
-              label: false,
-              placeholder: "💭  Add your thoughts about this movie...",
-              input_html: { class: "form-control form-control-lg custom-input" } %>
-      </div>
-
-      <div class="col-12 col-md-2 d-grid">
-        <%= f.submit "➕ Add Movie", class: "btn btn-danger btn-lg fw-bold shadow-sm" %>
-      </div>
+  <!-- Sticky Topbar -->
+  <div class="position-sticky top-0 bg-danger text-light d-flex justify-content-between align-items-center px-3 py-2 shadow-sm" style="z-index: 1030;">
+    <%= link_to lists_path, class: "btn btn-outline-light btn-sm d-flex align-items-center" do %>
+      <i class="bi bi-arrow-left me-2"></i> Back
     <% end %>
 
-    <% if @bookmark.errors.any? %>
-      <div class="alert alert-danger mt-4 mb-0">
-        <ul class="mb-0">
-          <% @bookmark.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+    <h1 class="h4 fw-bold m-0 text-center flex-grow-1"><%= @selected_list.name %></h1>
+
+    <button type="button"
+            class="btn btn-dark fw-bold shadow-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#addMovieModal">
+      Add Movie to List
+    </button>
   </div>
 
 
-  <!-- Movies grid -->
-  <% if @selected_list.bookmarks.any? %>
-    <div class="row g-4">
-      <% @selected_list.bookmarks.each do |bookmark| %>
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <div class="card h-100 bg-dark text-light shadow-sm border-0 movie-card">
+  <!-- Add Movie Modal -->
+  <div class="modal fade mb-4" id="addMovieModal" tabindex="-1" aria-labelledby="addMovieModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light border-secondary shadow-lg p-3">
 
-            <% if bookmark.movie.poster_url.present? %>
-              <img src="<%= bookmark.movie.poster_url %>"
-                   class="card-img-top"
-                   alt="<%= bookmark.movie.title %>">
-            <% else %>
-              <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 400px;">
-                <span class="text-muted">No image</span>
-              </div>
-            <% end %>
-
-            <div class="card-body d-flex flex-column justify-content-between">
-              <div>
-                <h5 class="card-title fw-bold"><%= bookmark.movie.title %></h5>
-                <p class="card-text text-secondary"><%= truncate(bookmark.movie.overview, length: 100) %></p>
-
-                <% if bookmark.comment.present? %>
-                  <p class="text-muted fst-italic mt-2">“<%= bookmark.comment %>”</p>
-                <% end %>
-              </div>
-
-              <% if bookmark.movie.rating.present? %>
-                <div class="mt-2">
-                  <span class="badge bg-danger">⭐ <%= bookmark.movie.rating.round(1) %></span>
-                </div>
-              <% end %>
-
-              <!-- Delete bookmark -->
-              <div class="mt-3">
-                <%= link_to "🗑 Delete",
-                            bookmark_path(bookmark),
-                            data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove this movie?" },
-                            class: "btn btn-outline-light btn-sm w-100" %>
-              </div>
-            </div>
-          </div>
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title fw-bold" id="addMovieModalLabel">
+            Add a Movie to <%= @selected_list.name %>
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-      <% end %>
+
+        <div class="modal-body">
+          <%= simple_form_for([@selected_list, @bookmark]) do |f| %>
+            <div class="mb-3">
+              <%= f.association :movie,
+                    collection: Movie.all.order(:title),
+                    prompt: "Select a movie",
+                    label: false,
+                    input_html: { class: "form-select bg-secondary text-light border-0 shadow-none" } %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.input :comment,
+                    label: false,
+                    placeholder: "Add your thoughts about this movie...",
+                    input_html: { class: "form-control bg-secondary text-light border-0 shadow-none" } %>
+            </div>
+
+            <div class="d-grid">
+              <%= f.submit "Add Movie", class: "btn btn-primary fw-bold shadow-sm" %>
+            </div>
+          <% end %>
+        </div>
+
+      </div>
     </div>
+  </div>
+
+
+  <!-- Movie Sections -->
+  <% if @selected_list.bookmarks.any? %>
+    <% featured = @selected_list.bookmarks.first.movie %>
+    <% others = @selected_list.bookmarks.drop(1).map(&:movie) %>
+
+    <!-- Featured Hero Movie -->
+    <div class="container">
+      <div class="row align-items-center g-4 p-4 rounded bg-dark  text-light shadow-lg">
+
+        <!-- Cover -->
+        <div class="col-12 col-md-5">
+          <% if featured.poster_url.present? %>
+            <img src="<%= featured.poster_url %>"
+                alt="<%= featured.title %>"
+                class="img-fluid rounded shadow-lg object-fit-cover"
+                style="width: 100%; max-height: 600px; object-fit: cover;">
+          <% else %>
+            <div class="bg-secondary text-center d-flex align-items-center justify-content-center rounded" style="height: 400px;">
+              <span class="text-muted">No image</span>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- 📝 Content -->
+        <div class="col-12 col-md-7">
+          <h2 class="fw-bold mb-3 display-5"><%= featured.title %></h2>
+          <p class="lead mb-4"><%= truncate(featured.overview, length: 250) %></p>
+
+          <% if featured.rating.present? %>
+            <span class="badge bg-danger fs-6 mb-3">⭐ <%= featured.rating.round(1) %></span>
+          <% end %>
+
+
+
+      </div>
+    </div>
+
+    <!-- Movie Grid -->
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4 mt-2">
+      <%= render partial: "movies/movie", collection: others, as: :movie %>
+    </div>
+
   <% else %>
-    <p class="text-secondary">No movies in this list yet.</p>
+    <p class="text-secondary mt-5">No movies in this list yet.</p>
   <% end %>
-</turbo-frame>
