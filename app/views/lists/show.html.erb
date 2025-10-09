@@ -14,51 +14,62 @@
     </button>
   </div>
 
-
   <!-- Add Movie Modal -->
-  <div class="modal fade mb-4" id="addMovieModal" tabindex="-1" aria-labelledby="addMovieModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content bg-dark text-light border-secondary shadow-lg p-3">
+<div class="modal fade" id="addMovieModal" tabindex="-1" aria-labelledby="addMovieModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- breiter -->
+    <div class="modal-content shadow-lg overflow-hidden rounded-10 border border_light">
 
-        <div class="modal-header border-secondary">
-          <h5 class="modal-title fw-bold" id="addMovieModalLabel">
-            Add a Movie to <%= @selected_list.name %>
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="row g-0">
+        <!-- Left Side: Image -->
+        <div class="col-md-6 d-none d-md-block">
+          <div class="h-100 w-100 bg-light d-flex align-items-center justify-content-center">
+            <img src="<%= asset_path('cinema.png') %>"
+              alt="Movie background"
+              class="img-fluid h-100 w-100 object-fit-cover">
+          </div>
         </div>
 
-        <div class="modal-body">
+        <!-- Right Side: Form -->
+        <div class="col-md-6 bg-white p-5 d-flex flex-column justify-content-center">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h5 class="modal-title fw-bold text-uppercase" id="addMovieModalLabel">
+              Add a Movie to <%= @selected_list.name %>
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
           <%= simple_form_for([@selected_list, @bookmark]) do |f| %>
             <div class="mb-3">
               <%= f.association :movie,
                     collection: Movie.all.order(:title),
                     prompt: "Select a movie",
                     label: false,
-                    input_html: { class: "form-select bg-secondary text-light border-0 shadow-none" } %>
+                    input_html: { class: "form-select border-2 border-dark-subtle py-2" } %>
             </div>
 
             <div class="mb-3">
               <%= f.input :comment,
                     label: false,
                     placeholder: "Add your thoughts about this movie...",
-                    input_html: { class: "form-control bg-secondary text-light border-0 shadow-none" } %>
+                    input_html: { class: "form-control border-2 border-dark-subtle py-2" } %>
             </div>
 
             <div class="d-grid">
-              <%= f.submit "Add Movie", class: "btn btn-primary fw-bold shadow-sm" %>
+              <%= f.submit "Add Movie", class: "btn btn-danger text-white fw-bold py-2 fs-6 rounded-3 shadow-sm" %>
             </div>
           <% end %>
         </div>
-
       </div>
+
     </div>
   </div>
-
+</div>
 
   <!-- Movie Sections -->
-  <% if @selected_list.bookmarks.any? %>
-    <% featured = @selected_list.bookmarks.first.movie %>
-    <% others = @selected_list.bookmarks.drop(1).map(&:movie) %>
+  <% if @selected_list.bookmarks.any? %> <!-- Checks if the current list has any bookmarks (movies) -->
+    <% featured_bookmark = @selected_list.bookmarks.first %> <!-- Gets the first bookmark to feature prominently -->
+    <% featured = @selected_list.bookmarks.first.movie %> <!-- Fetches the movie associated with that featured bookmark -->
+    <% others = @selected_list.bookmarks.drop(1).map(&:movie) %> <!-- Collects all remaining movies (excluding the featured one) -->
 
     <!-- Featured Hero Movie -->
     <div class="container">
@@ -78,23 +89,38 @@
           <% end %>
         </div>
 
-        <!-- 📝 Content -->
+        <!-- Content -->
         <div class="col-12 col-md-7">
           <h2 class="fw-bold mb-3 display-5"><%= featured.title %></h2>
           <p class="lead mb-4"><%= truncate(featured.overview, length: 250) %></p>
 
-          <% if featured.rating.present? %>
-            <span class="badge bg-danger fs-6 mb-3">⭐ <%= featured.rating.round(1) %></span>
+           <% if featured_bookmark.comment.present? %>
+            <div class="mt-3 p-2 bg-secondary bg-opacity-25 border-start border-3 border-danger rounded">
+              <small class="text-info fw-bold d-block mb-1">
+                Your note:
+              </small>
+              <p class="fst-italic mb-0 text-light">"<%= featured_bookmark.comment %>"</p>
+            </div>
           <% end %>
 
+          <% if featured.rating.present? %>
+            <span class="badge bg-danger fs-6 mt-3">⭐ <%= featured.rating.round(1) %></span>
+          <% end %>
 
+        <div class="mt-3">
+        <!-- Links to the destroy action for this specific bookmark -->
+        <%= link_to "Delete",
+          bookmark_path(featured_bookmark),
+          data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove this movie?" },
+          class: "btn btn-outline-danger btn-sm p-2 fw-bold shadow-sm" %>
+        </div>
 
       </div>
     </div>
 
     <!-- Movie Grid -->
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4 mt-2">
-      <%= render partial: "movies/movie", collection: others, as: :movie %>
+      <%= render partial: "movies/movie", collection: @selected_list.bookmarks.drop(1), as: :bookmark %>
     </div>
 
   <% else %>

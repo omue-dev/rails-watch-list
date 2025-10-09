@@ -1,7 +1,16 @@
+<%= render "add_list_modal" %>
+
 <!-- Header -->
 <div class="text-center mb-5">
   <h1 class="fw-bold text-light display-5">Choose Your List</h1>
   <hr class="w-25 mx-auto border-danger opacity-75">
+  <!-- Modal-Trigger -->
+  <button type="button"
+          class="btn btn-danger text-dark fw-bold rounded-0 border-1 border-dark py-2"
+          data-bs-toggle="modal"
+          data-bs-target="#addListModal">
+    Add New List
+  </button>
 </div>
 
 <!-- Lists Grid -->
@@ -9,6 +18,7 @@
   <div class="row justify-content-center g-4">
 
     <% @lists.each do |list| %>
+      <!-- Picks a random movie from the database to display (used for preview images on each list card) -->
       <% random_movie = Movie.all.sample %>
 
       <div class="col-12 col-md-6 col-lg-4">
@@ -37,53 +47,3 @@
         </div>
       </div>
     <% end %>
-
-    <!-- Add New List Card (opens modal) -->
-    <div class="col-12 col-md-6 col-lg-4">
-      <div class="card bg-dark text-light shadow-lg border-0 rounded-3 list-card h-100 overflow-hidden d-flex flex-column justify-content-between align-items-center"
-           data-bs-toggle="modal" data-bs-target="#newListModal"
-           style="cursor: pointer;">
-
-        <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1">
-          <i class="bi bi-plus-circle-fill text-danger" style="font-size: 4rem;"></i>
-          <h5 class="fw-bold mt-3">Create New List</h5>
-        </div>
-
-        <div class="btn btn-danger text-dark fw-bold w-100 rounded-0 border-1 py-2">
-          New List
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-
-<!-- New List Modal -->
-<div class="modal fade" id="newListModal" tabindex="-1" aria-labelledby="newListModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-dark text-light border-secondary shadow-lg">
-
-      <div class="modal-header border-secondary">
-        <h5 class="modal-title fw-bold" id="newListModalLabel">Create New List</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <div class="modal-body">
-        <%= simple_form_for(List.new, html: { data: { turbo_frame: "main_content" } }) do |f| %>
-          <div class="mb-3">
-            <%= f.input :name,
-                        label: "List name",
-                        placeholder: "Enter a name for your list...",
-                        input_html: { class: "form-control bg-secondary text-light border-0 shadow-none" } %>
-          </div>
-
-          <div class="d-grid">
-            <%= f.submit "Create List", class: "btn btn-danger fw-bold shadow-sm" %>
-          </div>
-        <% end %>
-      </div>
-
-    </div>
-  </div>
-</div>

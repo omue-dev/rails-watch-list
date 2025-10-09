@@ -70,13 +70,13 @@ aside {
 // ---------- Modal Styling (Dark Mode) ----------
 
 .modal-content {
-  background-color: #1e1e1e;      // Matte black modal background
+  background-color: #f1f1f1;      // Matte black modal background
 }
 
 .modal-content .form-select,
 .modal-content .form-control {
-  background-color: #2a2a2a;      // Input fields in dark gray for consistency
-  color: #f5f5f5;
+  background-color: #f1f1f1;      // Input fields in dark gray for consistency
+  color: #333333;
 }
 
 .modal-content .btn-danger {
