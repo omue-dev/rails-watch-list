@@ -9,8 +9,11 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-
+  <%= render "lists/add_list_modal" %>
   <body>
+    <!-- Navbar -->
+    <%= render "shared/navbar" %>
+    <!-- Main content -->
    <main class="flex-grow-1 p-4">
       <div class="container">
         <%= yield %>

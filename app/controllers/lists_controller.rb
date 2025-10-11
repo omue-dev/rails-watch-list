@@ -1,4 +1,5 @@
 class ListsController < ApplicationController
+   before_action :set_list, only: [:show, :edit, :update, :destroy]
 
   # GET /lists
   def index
@@ -10,10 +11,8 @@ class ListsController < ApplicationController
    # GET /lists/:id
   # Displays a single list and its associated movies
   def show
-    # Find the selected list by its ID
-    @selected_list = List.find(params[:id])
     # Get all movies belonging to this list
-    @movies = @selected_list.movies
+    @movies = @list.movies
     # Initialize a new bookmark for adding movies to the list
     @bookmark = Bookmark.new
   end
@@ -38,9 +37,30 @@ class ListsController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+     if @list.update(list_params)
+      redirect_to root_path()
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @list.destroy
+
+    redirect_to root_path, status: :see_other, notice: "List was successfully deleted."
+  end
+
   private
 
+  def set_list
+    @list = List.find(params[:id])
+  end
+
   def list_params
-    params.require(:list).permit(:name)
+    params.require(:list).permit(:name, :photo)
   end
 end

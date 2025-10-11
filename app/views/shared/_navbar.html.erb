@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 border-bottom border-2 border-danger">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+
+    <%# ----------------------------------------------------------- %>
+    <%# CASE 1: Home / Lists Index Page                            %>
+    <%# Shows "Add New List" on the left, title in the center,     %>
+    <%# and "Login" button on the right.                           %>
+    <%# ----------------------------------------------------------- %>
+    <% if controller_name == "lists" && action_name == "index" %>
+      <!-- Left: Trigger modal to add a new list -->
+      <button type="button"
+              class="btn btn-outline-light fw-bold"
+              data-bs-toggle="modal"
+              data-bs-target="#addListModal">
+        Add New List
+      </button>
+
+      <!-- Center: Brand title -->
+      <h1>🔥 Watch List 🔥</h1>
+
+      <!-- Right: Login button -->
+      <a href="#" class="btn btn-outline-light fw-bold">Login</a>
+
+    <%# ----------------------------------------------------------- %>
+    <%# CASE 2: List Show Page (e.g. /lists/:id)                   %>
+    <%# Displays a Back button, the current list name,             %>
+    <%# and a button to add movies to that list.                   %>
+    <%# ----------------------------------------------------------- %>
+    <% elsif controller_name == "lists" && action_name == "show" %>
+      <!-- Left: Back to all lists -->
+      <%= link_to "← Back", lists_path, class: "btn btn-outline-light fw-bold" %>
+
+      <!-- Center: Current list name -->
+      <% if defined?(@list) && @list.present? %>
+        <h1><%= @list.name %></h1>
+      <% else %>
+        <h1>Movie List</h1>
+      <% end %>
+
+      <!-- Right: Trigger modal to add a new movie -->
+      <button type="button"
+              class="btn btn-outline-light fw-bold"
+              data-bs-toggle="modal"
+              data-bs-target="#addMovieModal">
+        Add Movie to List
+      </button>
+
+    <%# ----------------------------------------------------------- %>
+    <%# CASE 3: Default Navbar (other controllers/pages)           %>
+    <%# A simple centered brand name as fallback.                  %>
+    <%# ----------------------------------------------------------- %>
+    <% else %>
+      <a class="navbar-brand mx-auto fw-bold text-light">🔥 Watch List</a>
+    <% end %>
+  </div>
+</nav>

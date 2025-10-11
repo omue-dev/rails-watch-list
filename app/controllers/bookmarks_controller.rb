@@ -29,7 +29,7 @@ class BookmarksController < ApplicationController
     else
       # If saving fails (e.g. validation error), re-render the list view
       # with errors visible in the modal or form
-      @selected_list = @list
+      @list = @list
       @movies = @list.movies
       render "lists/show", status: :unprocessable_entity
     end

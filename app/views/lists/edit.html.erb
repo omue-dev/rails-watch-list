@@ -1,0 +1,50 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+
+      <!-- Card Wrapper -->
+      <div class="card bg-dark text-light border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0">
+
+          <!-- Left Side: Image -->
+          <div class="col-md-5 d-none d-md-block">
+            <img src="<%= asset_path('cinema.png') %>"
+                 alt="Edit background"
+                 class="img-fluid h-100 w-100 object-fit-cover">
+          </div>
+
+          <!-- Right Side: Form -->
+          <div class="col-md-7 p-4 bg-white text-dark d-flex flex-column justify-content-center">
+
+            <h3 class="fw-bold text-uppercase mb-4 text-center">
+              Edit List
+            </h3>
+
+            <%= simple_form_for(@list) do |f| %>
+              <div class="mb-3">
+                <%= f.input :name,
+                            label: false,
+                            placeholder: "Enter a new name for your list...",
+                            input_html: { class: "form-control border-2 border-dark-subtle py-2" } %>
+              </div>
+
+              <div class="mb-3">
+                <%= f.input :photo, as: :file, label: "Update list photo" %>
+              </div>
+
+              <div class="d-grid mt-4">
+                <%= f.submit "Update List",
+                             class: "btn btn-danger text-white fw-bold py-2 fs-6 rounded-3 shadow-sm" %>
+              </div>
+            <% end %>
+
+            <div class="text-center mt-4">
+              <%= link_to "← Back to all lists", root_path, class: "text-decoration-none text-secondary fw-bold" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,19 +1,3 @@
-  <!-- Sticky Topbar -->
-  <div class="position-sticky top-0 bg-danger text-light d-flex justify-content-between align-items-center px-3 py-2 shadow-sm" style="z-index: 1030;">
-    <%= link_to lists_path, class: "btn btn-outline-light btn-sm d-flex align-items-center" do %>
-      <i class="bi bi-arrow-left me-2"></i> Back
-    <% end %>
-
-    <h1 class="h4 fw-bold m-0 text-center flex-grow-1"><%= @selected_list.name %></h1>
-
-    <button type="button"
-            class="btn btn-dark fw-bold shadow-sm"
-            data-bs-toggle="modal"
-            data-bs-target="#addMovieModal">
-      Add Movie to List
-    </button>
-  </div>
-
   <!-- Add Movie Modal -->
 <div class="modal fade" id="addMovieModal" tabindex="-1" aria-labelledby="addMovieModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- breiter -->
@@ -33,12 +17,12 @@
         <div class="col-md-6 bg-white p-5 d-flex flex-column justify-content-center">
           <div class="d-flex justify-content-between align-items-start mb-3">
             <h5 class="modal-title fw-bold text-uppercase" id="addMovieModalLabel">
-              Add a Movie to <%= @selected_list.name %>
+              Add a Movie to <%= @list.name %>
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
-          <%= simple_form_for([@selected_list, @bookmark]) do |f| %>
+          <%= simple_form_for([@list, @bookmark]) do |f| %>
             <div class="mb-3">
               <%= f.association :movie,
                     collection: Movie.all.order(:title),
@@ -66,24 +50,29 @@
 </div>
 
   <!-- Movie Sections -->
-  <% if @selected_list.bookmarks.any? %> <!-- Checks if the current list has any bookmarks (movies) -->
-    <% featured_bookmark = @selected_list.bookmarks.first %> <!-- Gets the first bookmark to feature prominently -->
-    <% featured = @selected_list.bookmarks.first.movie %> <!-- Fetches the movie associated with that featured bookmark -->
-    <% others = @selected_list.bookmarks.drop(1).map(&:movie) %> <!-- Collects all remaining movies (excluding the featured one) -->
+  <% if @list.bookmarks.any? %> <!-- Checks if the current list has any bookmarks (movies) -->
+    <% featured_bookmark = @list.bookmarks.first %> <!-- Gets the first bookmark to feature prominently -->
+    <% featured = @list.bookmarks.first.movie %> <!-- Fetches the movie associated with that featured bookmark -->
+    <% others = @list.bookmarks.drop(1).map(&:movie) %> <!-- Collects all remaining movies (excluding the featured one) -->
 
     <!-- Featured Hero Movie -->
-    <div class="container">
-      <div class="row align-items-center g-4 p-4 rounded bg-dark  text-light shadow-lg">
+    <div class="container mt-4 mb-5">
+      <div class="row align-items-center g-4 p-4 bg-dark text-light border border-4 border-black rounded-4">
 
         <!-- Cover -->
-        <div class="col-12 col-md-5">
+        <div class="col-12 col-md-5 position-relative">
           <% if featured.poster_url.present? %>
             <img src="<%= featured.poster_url %>"
                 alt="<%= featured.title %>"
                 class="img-fluid rounded shadow-lg object-fit-cover"
                 style="width: 100%; max-height: 600px; object-fit: cover;">
+
+          <!-- Featured Badge -->
+          <span class="position-absolute top-0 start-0 m-3 px-3 py-2 bg-danger text-white fw-bold rounded-pill shadow">
+            ★ Featured
+          </span>
           <% else %>
-            <div class="bg-secondary text-center d-flex align-items-center justify-content-center rounded" style="height: 400px;">
+            <div class="bg-secondary text-center d-flex align-items-center justify-content-center rounded">
               <span class="text-muted">No image</span>
             </div>
           <% end %>
@@ -120,7 +109,7 @@
 
     <!-- Movie Grid -->
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4 mt-2">
-      <%= render partial: "movies/movie", collection: @selected_list.bookmarks.drop(1), as: :bookmark %>
+      <%= render partial: "movies/movie", collection: @list.bookmarks.drop(1), as: :bookmark %>
     </div>
 
   <% else %>
