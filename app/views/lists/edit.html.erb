@@ -8,9 +8,15 @@
 
           <!-- Left Side: Image -->
           <div class="col-md-5 d-none d-md-block">
-            <img src="<%= asset_path('cinema.png') %>"
-                 alt="Edit background"
-                 class="img-fluid h-100 w-100 object-fit-cover">
+            <% if @list.photo.attached? %>
+              <%= cl_image_tag @list.photo.key,
+                              class: "object-fit-cover w-100",
+                              style: "height: 420px; object-position: top;" %>
+            <% else %>
+              <img src="<%= asset_path('cinema.png') %>"
+                  alt="Edit background"
+                  class="img-fluid h-100 w-100 object-fit-cover">
+            <% end %>
           </div>
 
           <!-- Right Side: Form -->
